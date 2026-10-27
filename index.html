@@ -1,0 +1,325 @@
+<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="robots" content="noindex,nofollow"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>ひまわり組 綱引き並び順</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500;700;900&family=BIZ+UDPGothic:wght@400;700&display=swap">
+<style>
+/* Layout: one wide field scene (SVG, scrolls sideways on phones) under a pattern switcher; notes sit below. */
+:root {
+  --bg: #f6f8f2;
+  --ink: #23301f;
+  --ink-soft: #5d6a57;
+  --sky-top: #bfe3f4;
+  --sky-bottom: #e9f6fb;
+  --ground: #d9be92;
+  --ground-line: #c4a573;
+  --chalk: #ffffff;
+  --rope: #9a6b3c;
+  --team: #2f8f4e;
+  --petal: #f7b500;
+  --petal-2: #ffcf3a;
+  --seed: #6b4219;
+  --face: #ffe0c2;
+  --wait: #9aa894;
+  --bubble: #ffffff;
+  --accent: #e0731b;
+  --chip: #ffffff;
+  --chip-border: #d7dccf;
+  --headband: #d9443c;
+  --label: #23301f;
+  --label-bg: rgba(255,255,255,.88);
+  --font-display: "Zen Maru Gothic", "Hiragino Maru Gothic ProN", "Yu Gothic", sans-serif;
+  --font-body: "BIZ UDPGothic", "Hiragino Sans", "Yu Gothic", "Meiryo", sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #151a14; --ink: #e8eee2; --ink-soft: #a6b29f;
+    --sky-top: #1d3442; --sky-bottom: #2a4652; --ground: #6b5537; --ground-line: #806745; --chalk: #e9e3d4;
+    --rope: #c9925a; --team: #4fb36f; --petal: #f2b31c; --petal-2: #ffd04a; --seed: #5a3814; --face: #f3d3b4;
+    --wait: #7d8a78; --bubble: #26301f; --accent: #f29a4a; --chip: #1f261d; --chip-border: #39442f; --headband: #ef6a5f;
+    --label: #f1f5ec; --label-bg: rgba(20,26,19,.82);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #151a14; --ink: #e8eee2; --ink-soft: #a6b29f;
+  --sky-top: #1d3442; --sky-bottom: #2a4652; --ground: #6b5537; --ground-line: #806745; --chalk: #e9e3d4;
+  --rope: #c9925a; --team: #4fb36f; --petal: #f2b31c; --petal-2: #ffd04a; --seed: #5a3814; --face: #f3d3b4;
+  --wait: #7d8a78; --bubble: #26301f; --accent: #f29a4a; --chip: #1f261d; --chip-border: #39442f; --headband: #ef6a5f;
+  --label: #f1f5ec; --label-bg: rgba(20,26,19,.82);
+  color-scheme: dark;
+}
+body { background: var(--bg); color: var(--ink); font-family: var(--font-body); }
+.wrap {
+  max-width: 1180px; margin: 0 auto;
+  padding-block: 28px 40px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  display: grid; gap: 20px;
+}
+header { display: grid; gap: 6px; }
+.eyebrow { font-family: var(--font-display); font-weight: 700; color: var(--accent); letter-spacing: .08em; font-size: 13px; }
+h1 { font-family: var(--font-display); font-weight: 900; font-size: clamp(24px, 4vw, 34px); margin: 0; text-wrap: balance; line-height: 1.25; }
+.lede { margin: 0; color: var(--ink-soft); font-size: 15px; line-height: 1.7; max-width: 65ch; }
+
+.switch { display: flex; flex-wrap: wrap; gap: 10px; }
+.switch button {
+  font: inherit; font-family: var(--font-display); font-weight: 700; font-size: 15px;
+  padding: 10px 16px; border-radius: 999px; cursor: pointer;
+  background: var(--chip); color: var(--ink); border: 1.5px solid var(--chip-border);
+  display: inline-flex; gap: 8px; align-items: baseline;
+}
+.switch button small { font-family: var(--font-body); font-weight: 400; font-size: 12px; color: var(--ink-soft); }
+.switch button[aria-pressed="true"] { background: var(--team); border-color: var(--team); color: #fff; }
+.switch button[aria-pressed="true"] small { color: rgba(255,255,255,.85); }
+.switch button:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+
+.note { margin: 0; font-size: 14px; line-height: 1.7; color: var(--ink-soft); max-width: 70ch; min-height: 3.4em; }
+.note b { color: var(--ink); }
+
+.stage { position: relative; }
+.field { border-radius: 18px; border: 1.5px solid var(--chip-border); overflow: hidden; }
+.field svg { display: block; width: 100%; height: auto; }
+.turn-hint { display: none; margin: 0; font-family: var(--font-display); font-weight: 700; font-size: 14px; color: var(--accent); text-align: center; }
+/* Portrait phone: the scene simply fits the width; a short note suggests turning the phone. */
+@media (orientation: portrait) and (max-width: 640px) {
+  .turn-hint { display: block; }
+}
+
+.legend { display: flex; flex-wrap: wrap; gap: 8px 22px; font-size: 13px; color: var(--ink-soft); }
+.legend span { display: inline-flex; align-items: center; gap: 8px; }
+.sw { width: 18px; height: 6px; border-radius: 3px; display: inline-block; }
+
+svg text { font-family: var(--font-display); }
+.name { font-weight: 700; font-size: 19.5px; fill: var(--label); }
+.cm { font-family: var(--font-body); font-size: 18px; fill: var(--ink-soft); font-variant-numeric: tabular-nums; }
+@media (orientation: landscape) and (max-height: 520px) {
+  .wrap { padding-block: 8px 12px; gap: 8px; }
+  .eyebrow, .lede, .legend { display: none; }
+  h1 { font-size: 17px; }
+  header { display: flex; align-items: baseline; gap: 12px; }
+  .switch { gap: 6px; }
+  .switch button { font-size: 13px; padding: 5px 12px; }
+  .switch button small { display: none; }
+  .note { font-size: 12px; min-height: 0; line-height: 1.5; }
+  .field { max-height: calc(100vh - 130px); }
+  .field svg { max-height: calc(100vh - 130px); }
+  .stage { display: flex; justify-content: center; }
+  .field { width: fit-content; max-width: 100%; }
+  .field svg { width: auto; max-width: 100%; height: calc(100vh - 130px); }
+}
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+</style>
+</head><body>
+
+<div class="wrap">
+  <header>
+    <div class="eyebrow">ひまわり組 ｜ 綱引き作戦</div>
+    <h1>並び順シミュレーション</h1>
+  </header>
+
+  <div class="switch" role="group" aria-label="並び順のパターン">
+    <button type="button" id="btn-A" data-p="A" aria-pressed="true">パターンA <small>背の高い順（おすすめ）</small></button>
+    <button type="button" id="btn-A2" data-p="A2" aria-pressed="false">パターンA' <small>号令役を後ろ寄りに</small></button>
+    <button type="button" id="btn-B" data-p="B" aria-pressed="false">パターンB <small>最後尾をあやと父に</small></button>
+  </div>
+  <p class="note" id="note"></p>
+
+  <div class="stage"><div class="field">
+    <svg id="scene" viewBox="0 0 1500 500" role="img" aria-label="綱引きの並び順のイラスト">
+      <defs>
+        <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="var(--sky-top)"/><stop offset="1" stop-color="var(--sky-bottom)"/>
+        </linearGradient>
+      </defs>
+      <rect x="0" y="0" width="1500" height="500" fill="url(#sky)"/>
+      <g id="bunting"></g>
+      <rect x="0" y="410" width="1500" height="90" fill="var(--ground)"/>
+      <line x1="0" y1="410" x2="1500" y2="410" stroke="var(--ground-line)" stroke-width="3"/>
+      <!-- waiting area -->
+      <rect x="10" y="420" width="214" height="8" rx="4" fill="var(--ground-line)" opacity=".6"/>
+      <g id="waiting"></g>
+      <!-- center line + opponent -->
+      <line x1="1390" y1="400" x2="1390" y2="490" stroke="var(--chalk)" stroke-width="6" stroke-linecap="round"/>
+      <text x="1448" y="250" text-anchor="middle" class="cm" style="font-size:20px">相手 →</text>
+      <polyline id="rope" fill="none" stroke="var(--rope)" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
+      <polygon id="flag" fill="var(--headband)"/>
+      <g id="team"></g>
+      <g id="labels"></g>
+    </svg>
+  </div></div>
+
+  <div class="legend">
+    <span><i class="sw" style="background:var(--rope)"></i>ロープ（手の高さをつないだ線）</span>
+    <span><i class="sw" style="background:var(--headband)"></i>赤いはちまき＝号令役</span>
+    <span><i class="sw" style="background:var(--chalk);outline:1px solid var(--chip-border)"></i>白線＝中央線</span>
+    <span>※ 身長差は見やすいように強調して描いています</span>
+  </div>
+</div>
+
+<script>
+(() => {
+  const SVGNS = "http://www.w3.org/2000/svg";
+  const M = {
+    ayato:   { name: "あやと父",     cm: 190 },
+    natsuki: { name: "なつき父",     cm: 177 },
+    suguru:  { name: "すぐる父",     cm: 175 },
+    sosuke:  { name: "そうすけ父",   cm: 171 },
+    hinata:  { name: "ひなた父",     cm: 171, leader: true },
+    aoi:     { name: "あおい父",     cm: 170 },
+    yuta:    { name: "ゆた父",       cm: 170 },
+    haruki:  { name: "はるき父",     cm: 168 },
+    konosuke:{ name: "こうのすけ父", cm: 165 },
+  };
+  // front (opponent side) → back
+  const P = {
+    A:  { order: ["ayato","natsuki","suguru","sosuke","hinata","aoi","yuta","haruki","konosuke"],
+          note: "<b>背の高い順どおり。</b>前から背の高い人が並ぶので、ロープがゆるやかな一直線になります。" },
+    A2: { order: ["ayato","natsuki","suguru","sosuke","aoi","yuta","hinata","haruki","konosuke"],
+          note: "<b>号令役を真ん中と最後尾の間へ。</b>ひなた父を7番目に下げた並びです。前後との身長差は1〜3cmなので、ロープの高さはほとんど変わりません。" },
+    B:  { order: ["natsuki","suguru","sosuke","hinata","aoi","yuta","haruki","konosuke","ayato"],
+          note: "<b>あやと父を最後尾に。</b>いちばん背の高い人が後ろに来るので、最後尾だけロープが高く上がって一直線になりません。" },
+  };
+
+  const G = 410, FRONT_X = 1335, GAP = 124, LEAN = 0.5;
+  const team = document.getElementById("team"), labels = document.getElementById("labels");
+  const rope = document.getElementById("rope"), flag = document.getElementById("flag");
+  const el = (tag, attrs = {}, parent) => { const n = document.createElementNS(SVGNS, tag); for (const k in attrs) n.setAttribute(k, attrs[k]); if (parent) parent.appendChild(n); return n; };
+
+  // bunting
+  (() => {
+    const g = document.getElementById("bunting"); const cols = ["#e5484d","#f7b500","#2f8f4e","#2f80ed","#ffffff"];
+    el("path", { d: "M0 18 Q750 70 1500 18", fill: "none", stroke: "#7d8a78", "stroke-width": 2 }, g);
+    for (let i = 0; i < 36; i++) { const u = i / 35, x = u * 1500, y = 18 + 4 * 26 * u * (1 - u);
+      el("polygon", { points: `${x-14},${y} ${x+14},${y} ${x},${y+32}`, fill: cols[i % 5] }, g); }
+  })();
+
+  // sunflower head
+  function sunflower(parent, r, cls) {
+    const g = el("g", { class: cls || "" }, parent);
+    for (let i = 0; i < 14; i++) {
+      const a = i * Math.PI / 7;
+      el("ellipse", { cx: Math.cos(a) * r * 1.05, cy: Math.sin(a) * r * 1.05, rx: r * .6, ry: r * .26,
+        transform: `rotate(${a * 180 / Math.PI} ${Math.cos(a) * r * 1.05} ${Math.sin(a) * r * 1.05})`,
+        fill: i % 2 ? "var(--petal-2)" : "var(--petal)" }, g);
+    }
+    el("circle", { r: r * .82, fill: "var(--seed)" }, g);
+    el("circle", { r: r * .62, fill: "var(--face)" }, g);
+    return g;
+  }
+
+  // build one pulling figure; returns updater
+  const figs = {};
+  for (const id in M) {
+    const m = M[id], H = 218 + (m.cm - 170) * 3.2;   // height differences exaggerated so they are easy to see
+    const g = el("g", {}, team);
+    const legB = el("line", { stroke: "var(--team)", "stroke-width": H * .065, "stroke-linecap": "round" }, g);
+    const legF = el("line", { stroke: "var(--team)", "stroke-width": H * .065, "stroke-linecap": "round" }, g);
+    const body = el("line", { stroke: "var(--team)", "stroke-width": H * .08, "stroke-linecap": "round" }, g);
+    const arm  = el("polyline", { fill: "none", stroke: "var(--team)", "stroke-width": H * .052, "stroke-linecap": "round", "stroke-linejoin": "round" }, g);
+    const headG = el("g", {}, g);
+    const r = H * .095; sunflower(headG, r);
+    const eye = el("circle", { r: r * .13, fill: "#2a2a2a" }, headG);
+    if (m.leader) {
+      el("rect", { x: -r * .64, y: -r * .58, width: r * 1.28, height: r * .34, fill: "var(--headband)", rx: r * .1 }, headG);
+      el("path", { d: `M${-r*.6} ${-r*.45} l${-r*.9} ${-r*.35} l${r*.12} ${r*.5} z`, fill: "var(--headband)" }, headG);
+      el("path", { d: `M${-r*.6} ${-r*.4} l${-r*.85} ${r*.15} l${r*.25} ${r*.35} z`, fill: "var(--headband)" }, headG);
+    }
+    eye.setAttribute("cx", r * .28); eye.setAttribute("cy", -r * .18);
+    const lab = el("g", {}, labels);
+    const bg = el("rect", { rx: 10, fill: "var(--label-bg)" }, lab);
+    const t1 = el("text", { class: "name", "text-anchor": "middle" }, lab); t1.textContent = m.name;
+    const t2 = el("text", { class: "cm", "text-anchor": "middle" }, lab); t2.textContent = `${m.cm}cm`;
+    figs[id] = { m, H, r, g, legB, legF, body, arm, headG, lab, bg, t1, t2, x: FRONT_X, hand: [0, 0] };
+  }
+
+  function drawFig(f, x, lean) {
+    const H = f.H, L1 = .47 * H, L2 = .33 * H, r = f.r;
+    const ffx = x + .14 * H, bfx = x - .02 * H;
+    const hip = [x - Math.sin(lean) * L1 * .55, G - Math.cos(lean) * L1];
+    const sh = [hip[0] - Math.sin(lean) * L2, hip[1] - Math.cos(lean) * L2];
+    const hd = [sh[0] - Math.sin(lean) * r * 1.35, sh[1] - Math.cos(lean) * r * 1.35];
+    const hand = [hip[0] + .34 * H, hip[1] - .06 * H];
+    f.legF.setAttribute("x1", ffx); f.legF.setAttribute("y1", G); f.legF.setAttribute("x2", hip[0]); f.legF.setAttribute("y2", hip[1]);
+    f.legB.setAttribute("x1", bfx); f.legB.setAttribute("y1", G); f.legB.setAttribute("x2", hip[0]); f.legB.setAttribute("y2", hip[1]);
+    f.body.setAttribute("x1", hip[0]); f.body.setAttribute("y1", hip[1]); f.body.setAttribute("x2", sh[0]); f.body.setAttribute("y2", sh[1]);
+    f.arm.setAttribute("points", `${sh[0]},${sh[1]} ${(sh[0] + hand[0]) / 2 + .02 * H},${(sh[1] + hand[1]) / 2 + .05 * H} ${hand[0]},${hand[1]}`);
+    f.headG.setAttribute("transform", `translate(${hd[0]} ${hd[1]}) rotate(${-lean * 40})`);
+    f.hand = hand;
+    // label under the feet
+    const cx = x + .06 * H;
+    f.t1.setAttribute("x", cx); f.t1.setAttribute("y", G + 41);
+    f.t2.setAttribute("x", cx); f.t2.setAttribute("y", G + 66);
+    f.bg.setAttribute("x", cx - 60); f.bg.setAttribute("y", G + 14); f.bg.setAttribute("width", 120); f.bg.setAttribute("height", 62);
+  }
+
+  // waiting members (7 more → 16 total)
+  (() => {
+    const g = document.getElementById("waiting"); const n = 7, H = 130;
+    for (let i = 0; i < n; i++) {
+      const x = 26 + i * 31, w = el("g", { opacity: .9 }, g);
+      el("line", { x1: x - 8, y1: G + 10, x2: x, y2: G - H * .45, stroke: "var(--wait)", "stroke-width": 8, "stroke-linecap": "round" }, w);
+      el("line", { x1: x + 8, y1: G + 10, x2: x, y2: G - H * .45, stroke: "var(--wait)", "stroke-width": 8, "stroke-linecap": "round" }, w);
+      el("line", { x1: x, y1: G - H * .45, x2: x, y2: G - H * .78, stroke: "var(--wait)", "stroke-width": 10, "stroke-linecap": "round" }, w);
+      el("polyline", { points: `${x - 14},${G - H * .52} ${x},${G - H * .74} ${x + 14},${G - H * .52}`, fill: "none", stroke: "var(--wait)", "stroke-width": 7, "stroke-linecap": "round", "stroke-linejoin": "round" }, w);
+      const hg = el("g", { transform: `translate(${x} ${G - H * .9})`, opacity: .55 }, w); sunflower(hg, 13);
+      const q = el("text", { x: x, y: G - H * .9 + 6, "text-anchor": "middle", style: "font-size:17px;font-weight:900", fill: "var(--seed)" }, w); q.textContent = "?";
+      w.style.animation = `bob 2.4s ${i * .2}s ease-in-out infinite`;
+    }
+    // speech bubble
+    const bx = 6, by = 88, bw = 200, bh = 74;
+    el("rect", { x: bx, y: by, width: bw, height: bh, rx: 33, fill: "var(--bubble)", stroke: "var(--chip-border)", "stroke-width": 2 }, g);
+    el("path", { d: `M${bx + 90} ${by + bh - 1} l12 104 l12 -104 z`, fill: "var(--bubble)", stroke: "var(--chip-border)", "stroke-width": 2, "stroke-linejoin": "round" }, g);
+    el("rect", { x: bx + 88, y: by + bh - 4, width: 30, height: 6, fill: "var(--bubble)" }, g);
+    const t = el("text", { x: bx + bw / 2, y: by + 32, "text-anchor": "middle", style: "font-size:20px;font-weight:700", fill: "var(--ink)" }, g);
+    t.textContent = "ノートへの入力";
+    const t3 = el("text", { x: bx + bw / 2, y: by + 58, "text-anchor": "middle", style: "font-size:20px;font-weight:700", fill: "var(--ink)" }, g);
+    t3.textContent = "待ってるよ";
+    const c = el("text", { x: 118, y: G + 56, "text-anchor": "middle", class: "cm" }, g); c.textContent = "あと7人";
+    const st = document.createElementNS(SVGNS, "style");
+    st.textContent = "@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}} @media (prefers-reduced-motion: reduce){#waiting g{animation:none!important}}";
+    g.appendChild(st);
+  })();
+
+  // positions + animation
+  const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  let current = "A", from = {}, to = {}, t0 = 0;
+  const targetX = (p) => { const o = {}; P[p].order.forEach((id, i) => o[id] = FRONT_X - i * GAP); return o; };
+  to = targetX("A"); for (const id in to) from[id] = to[id];
+  const ease = (u) => u < 0 ? 0 : u > 1 ? 1 : 1 - Math.pow(1 - u, 3);
+
+  function frame(now) {
+    const u = ease((now - t0) / 700);
+    const sway = reduce ? 0 : Math.sin(now / 520) * .035;
+    for (const id in figs) {
+      const f = figs[id], x = from[id] + (to[id] - from[id]) * u;
+      f.x = x; drawFig(f, x, LEAN + sway + (f.m.cm - 172) * 0);
+    }
+    // rope: from the back member's hand to the opponent side, through every hand (front→back order by x)
+    const hs = Object.values(figs).sort((a, b) => b.x - a.x).map(f => f.hand);
+    const last = hs[hs.length - 1], front = hs[0];
+    const pts = [[1500, front[1] - 4], ...hs, [last[0] - 60, last[1] + 6]];
+    rope.setAttribute("points", pts.map(p => p.join(",")).join(" "));
+    const fy = front[1] + (front[1] - 4 - front[1]) * ((1390 - front[0]) / (1500 - front[0]));
+    flag.setAttribute("points", `1386,${fy} 1394,${fy} 1406,${fy + 46} 1374,${fy + 46}`);
+    requestAnimationFrame(frame);
+  }
+
+  function setPattern(p) {
+    if (!P[p]) return;
+    current = p;
+    for (const id in figs) from[id] = figs[id].x;
+    to = targetX(p); t0 = performance.now();
+    document.querySelectorAll(".switch button").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.p === p)));
+    document.getElementById("note").innerHTML = P[p].note;
+    try { localStorage.setItem("tsunahiki-pattern", p); } catch (e) {}
+  }
+  document.querySelectorAll(".switch button").forEach(b => b.addEventListener("click", () => setPattern(b.dataset.p)));
+  let saved = "A"; try { saved = localStorage.getItem("tsunahiki-pattern") || "A"; } catch (e) {}
+  for (const id in figs) figs[id].x = targetX(saved)[id];
+  setPattern(saved); for (const id in figs) from[id] = to[id];
+  requestAnimationFrame(frame);
+})();
+</script>
+</body></html>
