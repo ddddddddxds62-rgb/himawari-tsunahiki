@@ -212,7 +212,7 @@ svg text { font-family: var(--font-display); }
   // build one pulling figure; returns updater
   const figs = {};
   for (const id in M) {
-    const m = M[id], H = 218 + (m.cm - 170) * 3.2;   // height differences exaggerated so they are easy to see
+    const m = M[id], H = m.cm * 218 / 170;   // true-to-scale height
     const g = el("g", {}, team);
     const legB = el("line", { stroke: "var(--team)", "stroke-width": H * .065, "stroke-linecap": "round" }, g);
     const legF = el("line", { stroke: "var(--team)", "stroke-width": H * .065, "stroke-linecap": "round" }, g);
