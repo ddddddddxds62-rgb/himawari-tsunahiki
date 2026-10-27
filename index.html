@@ -163,10 +163,11 @@ svg text { font-family: var(--font-display); }
   const SVGNS = "http://www.w3.org/2000/svg";
   const M = {
     ayato:   { name: "あやと父",     cm: 190 },
+    akashi:  { name: "あかし父",     cm: 180 },
     natsuki: { name: "なつき父",     cm: 177 },
     suguru:  { name: "すぐる父",     cm: 175 },
     sosuke:  { name: "そうすけ父",   cm: 171 },
-    hinata:  { name: "ひなた父",     cm: 171, leader: true },
+    hinata:  { name: "ひなた父",     cm: 172, leader: true },
     aoi:     { name: "あおい父",     cm: 170 },
     yuta:    { name: "ゆた父",       cm: 170 },
     haruki:  { name: "はるき父",     cm: 168 },
@@ -174,15 +175,15 @@ svg text { font-family: var(--font-display); }
   };
   // front (opponent side) → back
   const P = {
-    A:  { order: ["ayato","natsuki","suguru","sosuke","hinata","aoi","yuta","haruki","konosuke"],
+    A:  { order: ["ayato","akashi","natsuki","suguru","hinata","sosuke","aoi","yuta","haruki","konosuke"],
           note: "<b>背の高い順どおり。</b>前から背の高い人が並ぶので、ロープがゆるやかな一直線になります。" },
-    A2: { order: ["ayato","natsuki","suguru","sosuke","aoi","yuta","hinata","haruki","konosuke"],
-          note: "<b>号令役を真ん中と最後尾の間へ。</b>ひなた父を7番目に下げた並びです。前後との身長差は1〜3cmなので、ロープの高さはほとんど変わりません。" },
-    B:  { order: ["natsuki","suguru","sosuke","hinata","aoi","yuta","haruki","konosuke","ayato"],
+    A2: { order: ["ayato","akashi","natsuki","suguru","sosuke","aoi","yuta","hinata","haruki","konosuke"],
+          note: "<b>号令役を真ん中と最後尾の間へ。</b>ひなた父を8番目に下げた並びです。前後との身長差は2〜4cmなので、ロープの高さはほとんど変わりません。" },
+    B:  { order: ["akashi","natsuki","suguru","hinata","sosuke","aoi","yuta","haruki","konosuke","ayato"],
           note: "<b>あやと父を最後尾に。</b>いちばん背の高い人が後ろに来るので、最後尾だけロープが高く上がって一直線になりません。" },
   };
 
-  const G = 410, FRONT_X = 1335, GAP = 124, LEAN = 0.5;
+  const G = 410, FRONT_X = 1335, GAP = 118, LEAN = 0.5;
   const team = document.getElementById("team"), labels = document.getElementById("labels");
   const rope = document.getElementById("rope"), flag = document.getElementById("flag");
   const el = (tag, attrs = {}, parent) => { const n = document.createElementNS(SVGNS, tag); for (const k in attrs) n.setAttribute(k, attrs[k]); if (parent) parent.appendChild(n); return n; };
@@ -254,9 +255,9 @@ svg text { font-family: var(--font-display); }
     f.bg.setAttribute("x", cx - 60); f.bg.setAttribute("y", G + 14); f.bg.setAttribute("width", 120); f.bg.setAttribute("height", 62);
   }
 
-  // waiting members (7 more → 16 total)
+  // waiting members (6 more → 16 total)
   (() => {
-    const g = document.getElementById("waiting"); const n = 7, H = 130;
+    const g = document.getElementById("waiting"); const n = 6, H = 130;
     for (let i = 0; i < n; i++) {
       const x = 26 + i * 31, w = el("g", { opacity: .9 }, g);
       el("line", { x1: x - 8, y1: G + 10, x2: x, y2: G - H * .45, stroke: "var(--wait)", "stroke-width": 8, "stroke-linecap": "round" }, w);
@@ -276,7 +277,7 @@ svg text { font-family: var(--font-display); }
     t.textContent = "ノートへの入力";
     const t3 = el("text", { x: bx + bw / 2, y: by + 58, "text-anchor": "middle", style: "font-size:20px;font-weight:700", fill: "var(--ink)" }, g);
     t3.textContent = "待ってるよ";
-    const c = el("text", { x: 118, y: G + 56, "text-anchor": "middle", class: "cm" }, g); c.textContent = "あと7人";
+    const c = el("text", { x: 103, y: G + 56, "text-anchor": "middle", class: "cm" }, g); c.textContent = "あと6人";
     const st = document.createElementNS(SVGNS, "style");
     st.textContent = "@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}} @media (prefers-reduced-motion: reduce){#waiting g{animation:none!important}}";
     g.appendChild(st);
