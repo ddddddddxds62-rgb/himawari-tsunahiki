@@ -92,8 +92,8 @@ h1 { font-family: var(--font-display); font-weight: 900; font-size: clamp(24px, 
 .sw { width: 18px; height: 6px; border-radius: 3px; display: inline-block; }
 
 svg text { font-family: var(--font-display); }
-.name { font-weight: 700; font-size: 16px; fill: var(--label); }
-.cm { font-family: var(--font-body); font-size: 15px; fill: var(--ink-soft); font-variant-numeric: tabular-nums; }
+.name { font-weight: 700; font-size: 17px; fill: var(--label); }
+.cm { font-family: var(--font-body); font-size: 16px; fill: var(--ink-soft); font-variant-numeric: tabular-nums; }
 @media (orientation: landscape) and (max-height: 520px) {
   .wrap { padding-block: 8px 12px; gap: 8px; }
   .eyebrow, .lede, .legend { display: none; }
@@ -138,7 +138,7 @@ svg text { font-family: var(--font-display); }
       <rect x="0" y="410" width="1500" height="90" fill="var(--ground)"/>
       <line x1="0" y1="410" x2="1500" y2="410" stroke="var(--ground-line)" stroke-width="3"/>
       <!-- waiting area -->
-      <rect x="10" y="420" width="120" height="8" rx="4" fill="var(--ground-line)" opacity=".6"/>
+      
       <g id="waiting"></g>
       <!-- center line + opponent -->
       <line x1="1390" y1="400" x2="1390" y2="490" stroke="var(--chalk)" stroke-width="6" stroke-linecap="round"/>
@@ -185,7 +185,7 @@ svg text { font-family: var(--font-display); }
           note: "<b>あやと父を最後尾に。</b>いちばん背の高い人が後ろに来るので、最後尾だけロープが高く上がって一直線になりません。" },
   };
 
-  const G = 410, FRONT_X = 1335, GAP = 104, LEAN = 0.5;
+  const G = 410, FRONT_X = 1335, GAP = 110, LEAN = 0.5;
   const team = document.getElementById("team"), labels = document.getElementById("labels");
   const rope = document.getElementById("rope"), flag = document.getElementById("flag");
   const el = (tag, attrs = {}, parent) => { const n = document.createElementNS(SVGNS, tag); for (const k in attrs) n.setAttribute(k, attrs[k]); if (parent) parent.appendChild(n); return n; };
@@ -257,31 +257,37 @@ svg text { font-family: var(--font-display); }
     f.bg.setAttribute("x", cx - 60); f.bg.setAttribute("y", G + 14); f.bg.setAttribute("width", 120); f.bg.setAttribute("height", 62);
   }
 
-  // waiting members (4 more → 16 total)
+  // waiting members (4 more → 16 total) — floating in the sky on a cloud
   (() => {
-    const g = document.getElementById("waiting"); const n = 4, H = 130;
+    const g = document.getElementById("waiting"); const n = 4, H = 130, s = .7, CY = 162;
+    const fl = el("g", { class: "float" }, g);
+    // cloud
+    [[70,CY+6,62,16],[42,CY-2,26,18],[78,CY-8,30,22],[108,CY,26,16]].forEach(([cx,cy,rx,ry]) =>
+      el("ellipse", { cx, cy, rx, ry, fill: "#ffffff", opacity: .92 }, fl));
+    const fig = el("g", { transform: `translate(${40 - 26 * s} ${CY - G * s}) scale(${s})` }, fl);
     for (let i = 0; i < n; i++) {
-      const x = 26 + i * 27, w = el("g", { opacity: .9 }, g);
-      el("line", { x1: x - 8, y1: G + 10, x2: x, y2: G - H * .45, stroke: "var(--wait)", "stroke-width": 8, "stroke-linecap": "round" }, w);
-      el("line", { x1: x + 8, y1: G + 10, x2: x, y2: G - H * .45, stroke: "var(--wait)", "stroke-width": 8, "stroke-linecap": "round" }, w);
+      const x = 26 + i * 30, w = el("g", { opacity: .9 }, fig);
+      el("line", { x1: x - 8, y1: G, x2: x, y2: G - H * .45, stroke: "var(--wait)", "stroke-width": 8, "stroke-linecap": "round" }, w);
+      el("line", { x1: x + 8, y1: G, x2: x, y2: G - H * .45, stroke: "var(--wait)", "stroke-width": 8, "stroke-linecap": "round" }, w);
       el("line", { x1: x, y1: G - H * .45, x2: x, y2: G - H * .78, stroke: "var(--wait)", "stroke-width": 10, "stroke-linecap": "round" }, w);
       el("polyline", { points: `${x - 14},${G - H * .52} ${x},${G - H * .74} ${x + 14},${G - H * .52}`, fill: "none", stroke: "var(--wait)", "stroke-width": 7, "stroke-linecap": "round", "stroke-linejoin": "round" }, w);
       const hg = el("g", { transform: `translate(${x} ${G - H * .9})`, opacity: .55 }, w); sunflower(hg, 13);
       const q = el("text", { x: x, y: G - H * .9 + 6, "text-anchor": "middle", style: "font-size:17px;font-weight:900", fill: "var(--seed)" }, w); q.textContent = "?";
       w.style.animation = `bob 2.4s ${i * .2}s ease-in-out infinite`;
     }
-    // speech bubble
-    const bx = 6, by = 88, bw = 200, bh = 74;
-    el("rect", { x: bx, y: by, width: bw, height: bh, rx: 33, fill: "var(--bubble)", stroke: "var(--chip-border)", "stroke-width": 2 }, g);
-    el("path", { d: `M${bx + 50} ${by + bh - 1} l8 90 l12 -90 z`, fill: "var(--bubble)", stroke: "var(--chip-border)", "stroke-width": 2, "stroke-linejoin": "round" }, g);
-    el("rect", { x: bx + 48, y: by + bh - 4, width: 26, height: 6, fill: "var(--bubble)" }, g);
+    // re-draw front puff so feet sit "in" the cloud
+    el("ellipse", { cx: 72, cy: CY + 10, rx: 58, ry: 12, fill: "#ffffff", opacity: .95 }, fl);
+    // speech bubble (to the right, tail pointing at the cloud)
+    const bx = 140, by = 84, bw = 210, bh = 76;
+    el("rect", { x: bx, y: by, width: bw, height: bh, rx: 30, fill: "var(--bubble)", stroke: "var(--chip-border)", "stroke-width": 2 }, g);
+    el("path", { d: `M${bx + 1} ${by + 30} l-24 14 l24 10 z`, fill: "var(--bubble)", stroke: "var(--chip-border)", "stroke-width": 2, "stroke-linejoin": "round" }, g);
+    el("rect", { x: bx - 2, y: by + 28, width: 6, height: 28, fill: "var(--bubble)" }, g);
     const t = el("text", { x: bx + bw / 2, y: by + 32, "text-anchor": "middle", style: "font-size:20px;font-weight:700", fill: "var(--ink)" }, g);
     t.textContent = "ノートへの入力";
-    const t3 = el("text", { x: bx + bw / 2, y: by + 58, "text-anchor": "middle", style: "font-size:20px;font-weight:700", fill: "var(--ink)" }, g);
-    t3.textContent = "待ってるよ";
-    const c = el("text", { x: 66, y: G + 56, "text-anchor": "middle", class: "cm" }, g); c.textContent = "あと4人";
+    const t3 = el("text", { x: bx + bw / 2, y: by + 58, "text-anchor": "middle", style: "font-size:18px;font-weight:700", fill: "var(--ink)" }, g);
+    t3.textContent = "待ってるよ（あと4人）";
     const st = document.createElementNS(SVGNS, "style");
-    st.textContent = "@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}} @media (prefers-reduced-motion: reduce){#waiting g{animation:none!important}}";
+    st.textContent = "@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}} @keyframes drift{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}} #waiting .float{animation:drift 5s ease-in-out infinite} @media (prefers-reduced-motion: reduce){#waiting g{animation:none!important}}";
     g.appendChild(st);
   })();
 
