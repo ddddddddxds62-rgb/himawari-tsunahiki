@@ -128,9 +128,26 @@ svg text { font-family: var(--font-display); }
   .field svg { width: auto; max-width: 100%; height: calc(100vh - 130px); }
 }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+
+/* sunflower petal shower in the page background */
+#petals { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
+.wrap { position: relative; z-index: 1; }
+#petals i { position: absolute; top: -40px; display: block; will-change: transform;
+  animation: fall var(--d) linear var(--delay) infinite; opacity: var(--o); }
+#petals i::before { content: ""; display: block; width: var(--w); height: calc(var(--w) * 2.1);
+  background: var(--c); border-radius: 50% 50% 50% 50% / 62% 62% 38% 38%;
+  animation: spin var(--s) ease-in-out infinite alternate; }
+#petals i.bloom::before { height: var(--w); border-radius: 50%;
+  background: radial-gradient(circle, #6b4423 0 28%, transparent 30%),
+    conic-gradient(from 0deg, #f7b500 0 8%, #ffd34d 8% 12.5%, #f7b500 12.5% 20.5%, #ffd34d 20.5% 25%, #f7b500 25% 33%, #ffd34d 33% 37.5%, #f7b500 37.5% 45.5%, #ffd34d 45.5% 50%, #f7b500 50% 58%, #ffd34d 58% 62.5%, #f7b500 62.5% 70.5%, #ffd34d 70.5% 75%, #f7b500 75% 83%, #ffd34d 83% 87.5%, #f7b500 87.5% 95.5%, #ffd34d 95.5% 100%);
+  -webkit-mask: radial-gradient(circle, #000 66%, transparent 70%); mask: radial-gradient(circle, #000 66%, transparent 70%); }
+@keyframes fall { from { transform: translate3d(0, 0, 0); } to { transform: translate3d(var(--dx), 110vh, 0); } }
+@keyframes spin { from { transform: rotate(-35deg) rotateY(0deg); } to { transform: rotate(55deg) rotateY(160deg); } }
+@media (prefers-reduced-motion: reduce) { #petals { display: none; } }
 </style>
 </head><body>
 
+<div id="petals" aria-hidden="true"></div>
 <div class="wrap">
   <header>
     <div class="eyebrow">ひまわり組 ｜ 綱引き作戦</div>
@@ -356,6 +373,20 @@ svg text { font-family: var(--font-display); }
     const max = GAP - 14; if (t.getComputedTextLength() > max) { t.setAttribute("textLength", max); t.setAttribute("lengthAdjust", "spacingAndGlyphs"); } } };
   (document.fonts ? document.fonts.ready : Promise.resolve()).then(fitNames); fitNames();
 
+})();
+</script>
+<script>
+(() => {
+  const box = document.getElementById("petals"); if (!box) return;
+  const n = innerWidth < 640 ? 18 : 30, cols = ["#f7b500", "#ffc93c", "#ffd84d", "#f2a900"];
+  for (let i = 0; i < n; i++) {
+    const p = document.createElement("i"), r = Math.random, bloom = r() < .18;
+    if (bloom) p.className = "bloom";
+    const w = bloom ? 16 + r() * 10 : 7 + r() * 6;
+    p.style.cssText = `left:${r() * 100}vw;--w:${w}px;--c:${cols[i % cols.length]};--o:${(.35 + r() * .35).toFixed(2)};` +
+      `--d:${(9 + r() * 9).toFixed(1)}s;--delay:${(-r() * 18).toFixed(1)}s;--s:${(1.6 + r() * 2).toFixed(1)}s;--dx:${(r() * 160 - 60).toFixed(0)}px`;
+    box.appendChild(p);
+  }
 })();
 </script>
 </body></html>
