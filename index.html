@@ -91,7 +91,9 @@ h1 { font-family: var(--font-display); font-weight: 900; font-size: clamp(24px, 
   svg .num { display: inline; font-family: var(--font-display); font-weight: 900; font-size: 54px; fill: var(--label); }
   .order { display: block; margin-top: 12px; }
   .order h2 { margin: 0 0 8px; font-size: 13px; font-weight: 700; color: var(--ink-soft); }
-  .order ol { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 6px 10px; }
+  .order ol { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: 1fr 1fr; grid-auto-flow: column; gap: 6px 10px; }
+  .order li .nm { display: grid; line-height: 1.25; }
+  .order li .nm small { font-size: 11px; color: var(--ink-soft); }
   .order li { display: flex; align-items: center; gap: 6px; padding: 7px 8px; border-radius: 10px; background: var(--chip); border: 1.5px solid var(--chip-border); font-size: 14px; white-space: nowrap; }
   .order li .h { font-size: 12px; }
   .order li b { display: inline-grid; place-items: center; min-width: 24px; height: 24px; border-radius: 12px; background: var(--team); color: #fff; font-size: 13px; }
@@ -162,7 +164,7 @@ svg text { font-family: var(--font-display); }
       <g id="labels"></g>
     </svg>
   </div></div>
-  <div class="order" id="order"><h2>前（相手側）から順に ／ 赤＝号令役</h2><ol id="orderList"></ol></div>
+  <div class="order" id="order"><h2>前（相手側）から順に・左の列→右の列 ／ 赤＝号令役</h2><ol id="orderList"></ol></div>
 
   <div class="legend">
     <span><i class="sw" style="background:var(--rope)"></i>ロープ（手の高さをつないだ線）</span>
@@ -339,9 +341,11 @@ svg text { font-family: var(--font-display); }
     document.querySelectorAll(".switch button").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.p === p)));
     document.getElementById("note").innerHTML = P[p].note;
     const ol = document.getElementById("orderList"); ol.innerHTML = "";
+    ol.style.gridTemplateRows = `repeat(${Math.ceil(P[p].order.length / 2)}, auto)`;
     P[p].order.forEach((id, i) => { figs[id].t0.textContent = i + 1; const m = M[id];
       const li = document.createElement("li"); if (m.leader) li.className = "lead";
-      li.innerHTML = `<b>${i + 1}</b><span>${m.name}</span><span class="h">${m.cm}cm</span>`; ol.appendChild(li); });
+      const prev = i === 0 ? "相手チーム" : M[P[p].order[i - 1]].name;
+      li.innerHTML = `<b>${i + 1}</b><span class="nm">${m.name}<small>前：${prev}</small></span><span class="h">${m.cm}cm</span>`; ol.appendChild(li); });
   }
   document.querySelectorAll(".switch button").forEach(b => b.addEventListener("click", () => setPattern(b.dataset.p)));
   const saved = "A2";
