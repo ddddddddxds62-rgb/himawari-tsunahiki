@@ -133,8 +133,8 @@ svg text { font-family: var(--font-display); }
   </header>
 
   <div class="switch" role="group" aria-label="並び順のパターン">
-    <button type="button" id="btn-A" data-p="A" aria-pressed="true">パターンA <small>背の高い順（おすすめ）</small></button>
-    <button type="button" id="btn-A2" data-p="A2" aria-pressed="false">パターンA' <small>号令役を後ろ寄りに</small></button>
+    <button type="button" id="btn-A" data-p="A" aria-pressed="false">パターンA <small>背の高い順</small></button>
+    <button type="button" id="btn-A2" data-p="A2" aria-pressed="true">パターンA' <small>★ 決定</small></button>
     <button type="button" id="btn-B" data-p="B" aria-pressed="false">パターンB <small>最後尾をあやと父に</small></button>
   </div>
   <p class="note" id="note"></p>
@@ -195,7 +195,7 @@ svg text { font-family: var(--font-display); }
     A:  { order: ["ayato","akashi","natsuki","suguru","ryo","hinata","yuzuna","sosuke","aoi","yuta","kaito","satoru","haruki","konosuke"],
           note: "<b>背の高い順どおり。</b>前から背の高い人が並ぶので、ロープがゆるやかな一直線になります。" },
     A2: { order: ["ayato","akashi","natsuki","suguru","ryo","yuzuna","sosuke","aoi","yuta","kaito","satoru","hinata","haruki","konosuke"],
-          note: "<b>号令役を真ん中と最後尾の間へ。</b>ひなた父を12番目に下げた並びです。前後との身長差は2〜4cmなので、ロープの高さはほとんど変わりません。" },
+          note: "<b>【決定】号令役を真ん中と最後尾の間へ。</b>ひなた父を12番目に下げた並びです。前後との身長差は2〜4cmなので、ロープの高さはほとんど変わりません。" },
     B:  { order: ["akashi","natsuki","suguru","ryo","hinata","yuzuna","sosuke","aoi","yuta","kaito","satoru","haruki","konosuke","ayato"],
           note: "<b>あやと父を最後尾に。</b>いちばん背の高い人が後ろに来るので、最後尾だけロープが高く上がって一直線になりません。" },
   };
@@ -342,10 +342,9 @@ svg text { font-family: var(--font-display); }
     P[p].order.forEach((id, i) => { figs[id].t0.textContent = i + 1; const m = M[id];
       const li = document.createElement("li"); if (m.leader) li.className = "lead";
       li.innerHTML = `<b>${i + 1}</b><span>${m.name}</span><span class="h">${m.cm}cm</span>`; ol.appendChild(li); });
-    try { localStorage.setItem("tsunahiki-pattern", p); } catch (e) {}
   }
   document.querySelectorAll(".switch button").forEach(b => b.addEventListener("click", () => setPattern(b.dataset.p)));
-  let saved = "A"; try { saved = localStorage.getItem("tsunahiki-pattern") || "A"; } catch (e) {}
+  const saved = "A2";
   for (const id in figs) figs[id].x = targetX(saved)[id];
   setPattern(saved); for (const id in figs) from[id] = to[id];
   requestAnimationFrame(frame);
