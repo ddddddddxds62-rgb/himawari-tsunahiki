@@ -102,6 +102,9 @@ h1 { font-family: var(--font-display); font-weight: 900; font-size: clamp(24px, 
   .order li.lead b { background: var(--headband); }
 }
 
+.video h2 { margin: 0 0 8px; font-family: var(--font-display); font-size: 16px; font-weight: 700; }
+.video video { display: block; width: 100%; max-width: 720px; aspect-ratio: 16 / 9; border-radius: 14px; background: #000; }
+@media (orientation: landscape) and (max-height: 520px) { .video video { max-height: calc(100vh - 60px); width: auto; max-width: 100%; } }
 .legend { display: flex; flex-wrap: wrap; gap: 8px 22px; font-size: 13px; color: var(--ink-soft); }
 .legend span { display: inline-flex; align-items: center; gap: 8px; }
 .sw { width: 18px; height: 6px; border-radius: 3px; display: inline-block; }
@@ -160,6 +163,11 @@ svg text { font-family: var(--font-display); }
     </svg>
   </div></div>
   <div class="order" id="order"><h2>前（相手側）から順に・左の列→右の列 ／ 赤＝号令役</h2><ol id="orderList"></ol></div>
+
+  <section class="video">
+    <h2>綱引きのコツ（動画・約2分）</h2>
+    <video controls playsinline preload="none" poster="tips.jpg" src="tips.mp4"></video>
+  </section>
 
   <div class="legend">
     <span><i class="sw" style="background:var(--rope)"></i>ロープ（手の高さをつないだ線）</span>
