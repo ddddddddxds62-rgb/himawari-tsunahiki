@@ -83,8 +83,19 @@ h1 { font-family: var(--font-display); font-weight: 900; font-size: clamp(24px, 
 .field svg { display: block; width: 100%; height: auto; }
 .turn-hint { display: none; margin: 0; font-family: var(--font-display); font-weight: 700; font-size: 14px; color: var(--accent); text-align: center; }
 /* Portrait phone: the scene simply fits the width; a short note suggests turning the phone. */
+.pager { display: none; }
+/* Portrait phone: the scene becomes a swipeable carousel so names stay readable. */
 @media (orientation: portrait) and (max-width: 640px) {
-  .turn-hint { display: block; }
+  .stage { min-width: 0; }
+  .field { width: 100%; max-width: 100%; overflow-x: auto; overflow-y: hidden; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+  .field::-webkit-scrollbar { display: none; }
+  .track { position: relative; width: 1150px; }
+  .field svg { width: 1150px; max-width: none; }
+  .snap { position: absolute; top: 0; width: 1px; height: 1px; scroll-snap-align: start; }
+  .pager { display: flex; align-items: center; justify-content: center; gap: 12px; margin-top: 10px; font-size: 12px; color: var(--ink-soft); }
+  .dots { display: flex; gap: 8px; }
+  .dots button { width: 10px; height: 10px; padding: 0; border-radius: 50%; border: 0; background: var(--chip-border); cursor: pointer; }
+  .dots button[aria-current="true"] { background: var(--team); width: 22px; border-radius: 5px; }
 }
 
 .legend { display: flex; flex-wrap: wrap; gap: 8px 22px; font-size: 13px; color: var(--ink-soft); }
@@ -126,7 +137,7 @@ svg text { font-family: var(--font-display); }
   </div>
   <p class="note" id="note"></p>
 
-  <div class="stage"><div class="field">
+  <div class="stage"><div class="field" id="field"><div class="track" id="track">
     <svg id="scene" viewBox="0 0 1500 500" role="img" aria-label="綱引きの並び順のイラスト">
       <defs>
         <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
@@ -149,12 +160,12 @@ svg text { font-family: var(--font-display); }
       <g id="labels"></g>
     </svg>
   </div></div>
+  <div class="pager" id="pager" aria-hidden="true"><span>後ろ</span><span class="dots" id="dots"></span><span>前（相手側）</span></div></div>
 
   <div class="legend">
     <span><i class="sw" style="background:var(--rope)"></i>ロープ（手の高さをつないだ線）</span>
     <span><i class="sw" style="background:var(--headband)"></i>赤いはちまき＝号令役</span>
     <span><i class="sw" style="background:var(--chalk);outline:1px solid var(--chip-border)"></i>白線＝中央線</span>
-    <span>※ 身長差は見やすいように強調して描いています</span>
   </div>
 </div>
 
@@ -166,26 +177,28 @@ svg text { font-family: var(--font-display); }
     akashi:  { name: "あかし父",     cm: 180 },
     natsuki: { name: "なつき父",     cm: 177 },
     suguru:  { name: "すぐる父",     cm: 175 },
+    ryo:     { name: "りょう父",     cm: 175 },
     sosuke:  { name: "そうすけ父",   cm: 171 },
     hinata:  { name: "ひなた父",     cm: 172, leader: true },
     yuzuna:  { name: "ゆずな父",     cm: 172 },
     aoi:     { name: "あおい父",     cm: 170 },
     yuta:    { name: "ゆた父",       cm: 170 },
     kaito:   { name: "かいと父",     cm: 170 },
+    satoru:  { name: "さとる父",     cm: 170 },
     haruki:  { name: "はるき父",     cm: 168 },
     konosuke:{ name: "こうのすけ父", cm: 165 },
   };
   // front (opponent side) → back
   const P = {
-    A:  { order: ["ayato","akashi","natsuki","suguru","hinata","yuzuna","sosuke","aoi","yuta","kaito","haruki","konosuke"],
+    A:  { order: ["ayato","akashi","natsuki","suguru","ryo","hinata","yuzuna","sosuke","aoi","yuta","kaito","satoru","haruki","konosuke"],
           note: "<b>背の高い順どおり。</b>前から背の高い人が並ぶので、ロープがゆるやかな一直線になります。" },
-    A2: { order: ["ayato","akashi","natsuki","suguru","yuzuna","sosuke","aoi","yuta","kaito","hinata","haruki","konosuke"],
-          note: "<b>号令役を真ん中と最後尾の間へ。</b>ひなた父を10番目に下げた並びです。前後との身長差は2〜4cmなので、ロープの高さはほとんど変わりません。" },
-    B:  { order: ["akashi","natsuki","suguru","hinata","yuzuna","sosuke","aoi","yuta","kaito","haruki","konosuke","ayato"],
+    A2: { order: ["ayato","akashi","natsuki","suguru","ryo","yuzuna","sosuke","aoi","yuta","kaito","satoru","hinata","haruki","konosuke"],
+          note: "<b>号令役を真ん中と最後尾の間へ。</b>ひなた父を12番目に下げた並びです。前後との身長差は2〜4cmなので、ロープの高さはほとんど変わりません。" },
+    B:  { order: ["akashi","natsuki","suguru","ryo","hinata","yuzuna","sosuke","aoi","yuta","kaito","satoru","haruki","konosuke","ayato"],
           note: "<b>あやと父を最後尾に。</b>いちばん背の高い人が後ろに来るので、最後尾だけロープが高く上がって一直線になりません。" },
   };
 
-  const G = 410, FRONT_X = 1335, GAP = 110, LEAN = 0.5;
+  const G = 410, FRONT_X = 1335, GAP = 93, LEAN = 0.5;
   const team = document.getElementById("team"), labels = document.getElementById("labels");
   const rope = document.getElementById("rope"), flag = document.getElementById("flag");
   const el = (tag, attrs = {}, parent) => { const n = document.createElementNS(SVGNS, tag); for (const k in attrs) n.setAttribute(k, attrs[k]); if (parent) parent.appendChild(n); return n; };
@@ -254,12 +267,12 @@ svg text { font-family: var(--font-display); }
     const cx = x + .06 * H;
     f.t1.setAttribute("x", cx); f.t1.setAttribute("y", G + 41);
     f.t2.setAttribute("x", cx); f.t2.setAttribute("y", G + 66);
-    f.bg.setAttribute("x", cx - 60); f.bg.setAttribute("y", G + 14); f.bg.setAttribute("width", 120); f.bg.setAttribute("height", 62);
+    f.bg.setAttribute("x", cx - (GAP - 4) / 2); f.bg.setAttribute("y", G + 14); f.bg.setAttribute("width", GAP - 4); f.bg.setAttribute("height", 62);
   }
 
-  // waiting members (4 more → 16 total) — floating in the sky on a cloud
+  // waiting members (2 more → 16 total) — floating in the sky on a cloud
   (() => {
-    const g = document.getElementById("waiting"); const n = 4, H = 130, s = .7, CY = 162;
+    const g = document.getElementById("waiting"); const n = 2, H = 130, s = .7, CY = 162;
     const fl = el("g", { class: "float" }, g);
     // cloud
     [[70,CY+6,62,16],[42,CY-2,26,18],[78,CY-8,30,22],[108,CY,26,16]].forEach(([cx,cy,rx,ry]) =>
@@ -285,7 +298,7 @@ svg text { font-family: var(--font-display); }
     const t = el("text", { x: bx + bw / 2, y: by + 32, "text-anchor": "middle", style: "font-size:20px;font-weight:700", fill: "var(--ink)" }, g);
     t.textContent = "ノートへの入力";
     const t3 = el("text", { x: bx + bw / 2, y: by + 58, "text-anchor": "middle", style: "font-size:18px;font-weight:700", fill: "var(--ink)" }, g);
-    t3.textContent = "待ってるよ（あと4人）";
+    t3.textContent = "待ってるよ（あと2人）";
     const st = document.createElementNS(SVGNS, "style");
     st.textContent = "@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}} @keyframes drift{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}} #waiting .float{animation:drift 5s ease-in-out infinite} @media (prefers-reduced-motion: reduce){#waiting g{animation:none!important}}";
     g.appendChild(st);
@@ -329,6 +342,37 @@ svg text { font-family: var(--font-display); }
   for (const id in figs) figs[id].x = targetX(saved)[id];
   setPattern(saved); for (const id in figs) from[id] = to[id];
   requestAnimationFrame(frame);
+
+  // squeeze names that are wider than their chip
+  const fitNames = () => { for (const id in figs) { const t = figs[id].t1; t.removeAttribute("textLength"); t.removeAttribute("lengthAdjust");
+    const max = GAP - 14; if (t.getComputedTextLength() > max) { t.setAttribute("textLength", max); t.setAttribute("lengthAdjust", "spacingAndGlyphs"); } } };
+  (document.fonts ? document.fonts.ready : Promise.resolve()).then(fitNames); fitNames();
+
+  // portrait carousel: snap points + dots, starting at the front (opponent side)
+  const field = document.getElementById("field"), track = document.getElementById("track"), dots = document.getElementById("dots");
+  let pos = [];
+  function setupCarousel(keepEnd) {
+    track.querySelectorAll(".snap").forEach(s => s.remove()); dots.innerHTML = ""; pos = [];
+    if (getComputedStyle(field).overflowX !== "auto") return;
+    const cw = field.clientWidth, sw = track.scrollWidth; if (sw <= cw + 2) return;
+    const n = Math.max(2, Math.ceil(sw / cw - 0.15));
+    for (let i = 0; i < n; i++) {
+      const x = Math.round(i * (sw - cw) / (n - 1)); pos.push(x);
+      const s = document.createElement("div"); s.className = "snap"; s.style.left = x + "px"; track.appendChild(s);
+      const b = document.createElement("button"); b.type = "button"; b.setAttribute("aria-label", `${i + 1}/${n}`);
+      b.addEventListener("click", () => field.scrollTo({ left: x, behavior: "smooth" })); dots.appendChild(b);
+    }
+    if (keepEnd) field.scrollLeft = sw;
+    markDot();
+  }
+  function markDot() {
+    if (!pos.length) return; let k = 0, best = 1e9;
+    pos.forEach((x, i) => { const d = Math.abs(x - field.scrollLeft); if (d < best) { best = d; k = i; } });
+    [...dots.children].forEach((b, i) => b.setAttribute("aria-current", String(i === k)));
+  }
+  field.addEventListener("scroll", () => requestAnimationFrame(markDot), { passive: true });
+  let rt; addEventListener("resize", () => { clearTimeout(rt); rt = setTimeout(() => setupCarousel(true), 150); });
+  setupCarousel(true);
 })();
 </script>
 </body></html>
