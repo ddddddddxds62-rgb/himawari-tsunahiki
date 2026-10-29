@@ -83,19 +83,21 @@ h1 { font-family: var(--font-display); font-weight: 900; font-size: clamp(24px, 
 .field svg { display: block; width: 100%; height: auto; }
 .turn-hint { display: none; margin: 0; font-family: var(--font-display); font-weight: 700; font-size: 14px; color: var(--accent); text-align: center; }
 /* Portrait phone: the scene simply fits the width; a short note suggests turning the phone. */
-.pager { display: none; }
-/* Portrait phone: the scene becomes a swipeable carousel so names stay readable. */
+.num { display: none; }
+.order { display: none; }
+/* Portrait phone: whole scene stays visible; figures show their position number, names are listed below. */
 @media (orientation: portrait) and (max-width: 640px) {
-  .stage { min-width: 0; }
-  .field { width: 100%; max-width: 100%; overflow-x: auto; overflow-y: hidden; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
-  .field::-webkit-scrollbar { display: none; }
-  .track { position: relative; width: 1150px; }
-  .field svg { width: 1150px; max-width: none; }
-  .snap { position: absolute; top: 0; width: 1px; height: 1px; scroll-snap-align: start; }
-  .pager { display: flex; align-items: center; justify-content: center; gap: 12px; margin-top: 10px; font-size: 12px; color: var(--ink-soft); }
-  .dots { display: flex; gap: 8px; }
-  .dots button { width: 10px; height: 10px; padding: 0; border-radius: 50%; border: 0; background: var(--chip-border); cursor: pointer; }
-  .dots button[aria-current="true"] { background: var(--team); width: 22px; border-radius: 5px; }
+  svg .name, svg .cm { display: none; }
+  svg .num { display: inline; font-family: var(--font-display); font-weight: 900; font-size: 54px; fill: var(--label); }
+  .order { display: block; margin-top: 12px; }
+  .order h2 { margin: 0 0 8px; font-size: 13px; font-weight: 700; color: var(--ink-soft); }
+  .order ol { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 6px 10px; }
+  .order li { display: flex; align-items: center; gap: 6px; padding: 7px 8px; border-radius: 10px; background: var(--chip); border: 1.5px solid var(--chip-border); font-size: 14px; white-space: nowrap; }
+  .order li .h { font-size: 12px; }
+  .order li b { display: inline-grid; place-items: center; min-width: 24px; height: 24px; border-radius: 12px; background: var(--team); color: #fff; font-size: 13px; }
+  .order li .h { margin-left: auto; color: var(--ink-soft); font-variant-numeric: tabular-nums; font-size: 12px; }
+  .order li.lead { border-color: var(--headband); }
+  .order li.lead b { background: var(--headband); }
 }
 
 .legend { display: flex; flex-wrap: wrap; gap: 8px 22px; font-size: 13px; color: var(--ink-soft); }
@@ -137,7 +139,7 @@ svg text { font-family: var(--font-display); }
   </div>
   <p class="note" id="note"></p>
 
-  <div class="stage"><div class="field" id="field"><div class="track" id="track">
+  <div class="stage"><div class="field" id="field">
     <svg id="scene" viewBox="0 0 1500 500" role="img" aria-label="綱引きの並び順のイラスト">
       <defs>
         <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
@@ -160,7 +162,7 @@ svg text { font-family: var(--font-display); }
       <g id="labels"></g>
     </svg>
   </div></div>
-  <div class="pager" id="pager" aria-hidden="true"><span>後ろ</span><span class="dots" id="dots"></span><span>前（相手側）</span></div></div>
+  <div class="order" id="order"><h2>前（相手側）から順に ／ 赤＝号令役</h2><ol id="orderList"></ol></div>
 
   <div class="legend">
     <span><i class="sw" style="background:var(--rope)"></i>ロープ（手の高さをつないだ線）</span>
@@ -247,7 +249,8 @@ svg text { font-family: var(--font-display); }
     const bg = el("rect", { rx: 10, fill: "var(--label-bg)" }, lab);
     const t1 = el("text", { class: "name", "text-anchor": "middle" }, lab); t1.textContent = m.name;
     const t2 = el("text", { class: "cm", "text-anchor": "middle" }, lab); t2.textContent = `${m.cm}cm`;
-    figs[id] = { m, H, r, g, legB, legF, body, arm, headG, lab, bg, t1, t2, x: FRONT_X, hand: [0, 0] };
+    const t0 = el("text", { class: "num", "text-anchor": "middle" }, lab);
+    figs[id] = { m, H, r, g, legB, legF, body, arm, headG, lab, bg, t0, t1, t2, x: FRONT_X, hand: [0, 0] };
   }
 
   function drawFig(f, x, lean) {
@@ -266,7 +269,7 @@ svg text { font-family: var(--font-display); }
     // label under the feet
     const cx = x + .06 * H;
     f.t1.setAttribute("x", cx); f.t1.setAttribute("y", G + 41);
-    f.t2.setAttribute("x", cx); f.t2.setAttribute("y", G + 66);
+    f.t2.setAttribute("x", cx); f.t2.setAttribute("y", G + 66); f.t0.setAttribute("x", cx); f.t0.setAttribute("y", G + 64);
     f.bg.setAttribute("x", cx - (GAP - 4) / 2); f.bg.setAttribute("y", G + 14); f.bg.setAttribute("width", GAP - 4); f.bg.setAttribute("height", 62);
   }
 
@@ -335,6 +338,10 @@ svg text { font-family: var(--font-display); }
     to = targetX(p); t0 = performance.now();
     document.querySelectorAll(".switch button").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.p === p)));
     document.getElementById("note").innerHTML = P[p].note;
+    const ol = document.getElementById("orderList"); ol.innerHTML = "";
+    P[p].order.forEach((id, i) => { figs[id].t0.textContent = i + 1; const m = M[id];
+      const li = document.createElement("li"); if (m.leader) li.className = "lead";
+      li.innerHTML = `<b>${i + 1}</b><span>${m.name}</span><span class="h">${m.cm}cm</span>`; ol.appendChild(li); });
     try { localStorage.setItem("tsunahiki-pattern", p); } catch (e) {}
   }
   document.querySelectorAll(".switch button").forEach(b => b.addEventListener("click", () => setPattern(b.dataset.p)));
@@ -348,31 +355,6 @@ svg text { font-family: var(--font-display); }
     const max = GAP - 14; if (t.getComputedTextLength() > max) { t.setAttribute("textLength", max); t.setAttribute("lengthAdjust", "spacingAndGlyphs"); } } };
   (document.fonts ? document.fonts.ready : Promise.resolve()).then(fitNames); fitNames();
 
-  // portrait carousel: snap points + dots, starting at the front (opponent side)
-  const field = document.getElementById("field"), track = document.getElementById("track"), dots = document.getElementById("dots");
-  let pos = [];
-  function setupCarousel(keepEnd) {
-    track.querySelectorAll(".snap").forEach(s => s.remove()); dots.innerHTML = ""; pos = [];
-    if (getComputedStyle(field).overflowX !== "auto") return;
-    const cw = field.clientWidth, sw = track.scrollWidth; if (sw <= cw + 2) return;
-    const n = Math.max(2, Math.ceil(sw / cw - 0.15));
-    for (let i = 0; i < n; i++) {
-      const x = Math.round(i * (sw - cw) / (n - 1)); pos.push(x);
-      const s = document.createElement("div"); s.className = "snap"; s.style.left = x + "px"; track.appendChild(s);
-      const b = document.createElement("button"); b.type = "button"; b.setAttribute("aria-label", `${i + 1}/${n}`);
-      b.addEventListener("click", () => field.scrollTo({ left: x, behavior: "smooth" })); dots.appendChild(b);
-    }
-    if (keepEnd) field.scrollLeft = sw;
-    markDot();
-  }
-  function markDot() {
-    if (!pos.length) return; let k = 0, best = 1e9;
-    pos.forEach((x, i) => { const d = Math.abs(x - field.scrollLeft); if (d < best) { best = d; k = i; } });
-    [...dots.children].forEach((b, i) => b.setAttribute("aria-current", String(i === k)));
-  }
-  field.addEventListener("scroll", () => requestAnimationFrame(markDot), { passive: true });
-  let rt; addEventListener("resize", () => { clearTimeout(rt); rt = setTimeout(() => setupCarousel(true), 150); });
-  setupCarousel(true);
 })();
 </script>
 </body></html>
